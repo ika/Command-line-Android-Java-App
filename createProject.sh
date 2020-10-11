@@ -18,6 +18,7 @@ PROJECT_DIR_NAME="${PROJECT_NAME,,}"
 PROJECT_DIR="${WORKING_DIR}/${PROJECT_NAME}"
 PROJECT_RES_DIR="${PROJECT_DIR}/app/src/main/res"
 PROJECT_MAIN_DIR="${PROJECT_DIR}/app/src/main"
+PROJECT_VALUES_DIR="${PROJECT_MAIN_DIR}/res/values"
 
 PROJECT_PACKAGE_NAME="${PROJECT_DOMAIN_NAME}.${PROJECT_DIR_NAME}"
 
@@ -139,6 +140,28 @@ dependencies {
 }" > app/build.gradle
 fi
 
+# ----------------------------------------------
+# MainActivity.java
+# ----------------------------------------------
+if [ ! -d "${PROJECT_APP_DIR}" ]; then 
+	mkdir -p "${PROJECT_APP_DIR}"
+fi
+
+if [ -d "${PROJECT_APP_DIR}" ]; then 
+echo "package ${PROJECT_PACKAGE_NAME};
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+}" > "${PROJECT_APP_DIR}/MainActivity.java"
+fi
 
 # ----------------------------------------------
 #  AndroidManifest.xml
@@ -171,33 +194,18 @@ echo "<?xml version=\"1.0\" encoding=\"utf-8\"?>
 fi
 
 # ----------------------------------------------
-# MainActivity.java
-# ----------------------------------------------
-if [ ! -d "${PROJECT_APP_DIR}" ]; then 
-	mkdir -p "${PROJECT_APP_DIR}"
-fi
-
-if [ -d "${PROJECT_APP_DIR}" ]; then 
-echo "package ${PROJECT_PACKAGE_NAME};
-
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
-
-public class MainActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
-}" > "${PROJECT_APP_DIR}/MainActivity.java"
-fi
-
-# ----------------------------------------------
 # copy res and contents
 # ----------------------------------------------
 cp -R ${WORKING_DIR}/res  ${PROJECT_MAIN_DIR}
 
+# ----------------------------------------------
+# strings.xml (must be done before the manifest)
+# ----------------------------------------------
+if [ -d "${PROJECT_VALUES_DIR}" ]; then 
+echo "<resources>
+    <string name=\"app_name\">${PROJECT_NAME}</string>
+</resources>" > "${PROJECT_VALUES_DIR}/strings.xml" 
+fi
 
 # ----------------------------------------------
 # add gradle wrapper
