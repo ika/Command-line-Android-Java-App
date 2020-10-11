@@ -1,5 +1,3 @@
 # Command-line-Android-Java-App
 
-# Edit createProject.sh
-
-# then run it.
+Edit the first two lines of 'createProject.sh' then run it.
